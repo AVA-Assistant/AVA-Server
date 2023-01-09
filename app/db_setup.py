@@ -13,9 +13,11 @@ class IoT_device(db.Model):
     name = db.Column(db.String(20), unique=True, nullable=False)
     status = db.Column(db.Integer, nullable=False)
 
+    def __repr__(self):
+        return f"<Device: {self.name}>"
+
 
 with app.app_context():
-
     db.create_all()
     led_1 = IoT_device(name="led_1", status=0)
     db.session.add(led_1)
