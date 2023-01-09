@@ -7,17 +7,17 @@ import json
 def led():
     value = request.get_json()
 
-    mqttc.publish("led", json.dumps({"state": value.get("status")}))
+    mqttc.publish("led", json.dumps({"state": value.get("state")}))
 
     device = IoT_device.query.filter_by(name="led_1").first()
-    device.status = value.get("state")
+    device.state = value.get("state")
     db.session.commit()
 
     return value, 200
 
 
-@app.route('/ledStatus', methods=['GET'])
-def ledStatus():
+@app.route('/ledState', methods=['GET'])
+def ledState():
     device = IoT_device.query.filter_by(name="led_1").first()
 
-    return str(device.status),  200
+    return str(device.state),  200
