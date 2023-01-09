@@ -1,16 +1,6 @@
 from flask import Flask
-import paho.mqtt.client as mqtt
 from flask_sqlalchemy import SQLAlchemy
 
-
-def on_connect(mqttc, obj, flags, rc):
-    print("Connected!")
-
-
-mqttc = mqtt.Client("Publisher")
-mqttc.on_connect = on_connect
-mqttc.connect("192.168.1.191", 2000)
-mqttc.loop_start()
 
 app = Flask(__name__)
 
@@ -22,3 +12,11 @@ class IoT_device(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True, nullable=False)
     status = db.Column(db.Integer, nullable=False)
+
+
+with app.app_context():
+
+    db.create_all()
+    led_1 = IoT_device(name="led_1", status=0)
+    db.session.add(led_1)
+    db.session.commit()
