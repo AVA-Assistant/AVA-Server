@@ -2,6 +2,7 @@ from flask import Flask
 import paho.mqtt.client as mqtt
 from flask_sqlalchemy import SQLAlchemy
 import json
+from flask_socketio import SocketIO
 
 
 def on_connect(mqttc, obj, flags, rc):
@@ -19,6 +20,7 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///IoT_Devices.db'
 db = SQLAlchemy(app)
+socketio_app = SocketIO(app, cors_allowed_origins="*")
 
 
 class IoT_device(db.Model):

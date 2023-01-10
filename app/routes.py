@@ -1,23 +1,23 @@
-from app import app, db, mqttc, IoT_device
-from flask import request
+from app import app, db, mqttc, IoT_device, socketio_app
+from flask_socketio import send
 import json
 
 
-@app.route('/led', methods=['POST'])
-def led():
-    value = request.get_json()
-
-    mqttc.publish("led", json.dumps({"state": value.get("state")}))
-
-    device = IoT_device.query.filter_by(name="led_1").first()
-    device.state = value.get("state")
-    db.session.commit()
-
-    return value, 200
-
-
-@app.route('/ledState', methods=['GET'])
+@socketio_app.on('ledState')
 def ledState():
     device = IoT_device.query.filter_by(name="led_1").first()
 
-    return str(device.state),  200
+    send(str(device.state))
+
+
+@socketio_app.on("led")
+def led(msg):
+
+    mqttc.publish("led", json.dumps({"state": msg.get("state")}))
+
+    device = IoT_device.query.filter_by(name="led_1").first()
+    device.state = msg.get("state")
+    db.session.commit()
+
+    if msg.get("final") == True:
+        send(msg, broadcast=True)
