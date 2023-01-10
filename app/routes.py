@@ -7,7 +7,7 @@ import json
 def ledState():
     device = IoT_device.query.filter_by(name="led_1").first()
 
-    send(str(device.state))
+    send({"state": str(device.state)})
 
 
 @socketio_app.on("led")
