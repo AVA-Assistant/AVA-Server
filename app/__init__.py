@@ -19,6 +19,8 @@ mqttc.on_connect = on_connect
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///IoT_Devices.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 socketio_app = SocketIO(app, cors_allowed_origins="*")
 
