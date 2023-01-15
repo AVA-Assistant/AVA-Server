@@ -3,6 +3,7 @@ import paho.mqtt.client as mqtt
 from flask_sqlalchemy import SQLAlchemy
 import json
 from flask_socketio import SocketIO
+import uuid
 
 
 def on_connect(mqttc, obj, flags, rc):
@@ -12,7 +13,7 @@ def on_connect(mqttc, obj, flags, rc):
         mqttc.publish("led", json.dumps({"state": device.state}))
 
 
-mqttc = mqtt.Client("Publisher")
+mqttc = mqtt.Client("AVA-Server_" + str(uuid.uuid4()))
 mqttc.on_connect = on_connect
 
 
