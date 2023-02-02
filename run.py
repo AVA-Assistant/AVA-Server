@@ -1,6 +1,6 @@
 from app import app, mqttc, routes, socketio_app
 
-mqttc.connect("192.168.1.144", 2000)
+mqttc.connect("localhost", 2000)
 mqttc.loop_start()
 
 if __name__ == "__main__":
