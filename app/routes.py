@@ -10,7 +10,7 @@ def setup(devices):
             db_record = onOff.query.filter_by(
                 _mqttId=device["mqtt_Id"]).first()
             if (db_record):
-                device["status"] = "On" if db_record._state else "Off"
+                device["status"] = db_record._status
                 device["state"] = {'status': db_record._state}
             else:
                 newDevice = onOff(
@@ -21,7 +21,7 @@ def setup(devices):
             db_record = brightness.query.filter_by(
                 _mqttId=device["mqtt_Id"]).first()
             if (db_record):
-                device["status"] = "Off" if not db_record._state else '{db_record._value}%'
+                device["status"] = db_record._status
                 device["state"] = {
                     "status": db_record._state, "value": db_record._value}
             else:
@@ -33,7 +33,7 @@ def setup(devices):
             db_record = rgb.query.filter_by(
                 _mqttId=device["mqtt_Id"]).first()
             if (db_record):
-                device["status"] = "Off"
+                device["status"] = db_record._status
                 device["state"] = {
                     "status": db_record._state, "mode": db_record._mode, "value": db_record._value}
             else:
@@ -45,7 +45,7 @@ def setup(devices):
             db_record = rgbCct.query.filter_by(
                 _mqttId=device["mqtt_Id"]).first()
             if (db_record):
-                device["status"] = "Off"
+                device["status"] = db_record._status
                 device["state"] = {
                     "status": db_record._state, "mode": db_record._mode, "rgbValue": db_record._rgbValue, "cctValue": db_record._cctValue}
             else:
@@ -54,3 +54,26 @@ def setup(devices):
                 db.session.add(newDevice)
                 db.session.commit()
     emit("setup", devices)
+
+
+@socketio_app.on('changeState')
+def setup(device):
+    if (device["type"] == "onf"):
+        print(onOff.query.filter_by(
+            _mqttId=device["mqtt_Id"]).first())
+    elif (device["type"] == "brht"):
+        dbDev = brightness.query.filter_by(
+            _mqttId=device["mqtt_Id"]).first()
+        dbDev._state = device['state']['status']
+        dbDev._value = device['state']['value']
+        dbDev._status = device['status']
+        db.session.commit()
+    elif (device["type"] == "rgb"):
+        print(rgb.query.filter_by(
+            _mqttId=device["mqtt_Id"]).first())
+    elif (device["type"] == "rgbcct"):
+        print(rgbCct.query.filter_by(
+            _mqttId=device["mqtt_Id"]).first())
+
+    if device['emit']:
+        emit("stateChanged", device)
