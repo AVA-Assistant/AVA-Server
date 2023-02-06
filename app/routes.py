@@ -14,7 +14,7 @@ def setup(devices):
                 device["state"] = {'status': db_record._state}
             else:
                 newDevice = onOff(
-                    _id=int(device["id"]), _mqttId=device["mqtt_Id"], _state=False)
+                    _id=int(device["id"]), _mqttId=device["mqtt_Id"], _state=False, _status="Off")
                 db.session.add(newDevice)
                 db.session.commit()
         elif (device["type"] == "brht"):
@@ -26,7 +26,7 @@ def setup(devices):
                     "status": db_record._state, "value": db_record._value}
             else:
                 newDevice = brightness(
-                    _id=int(device["id"]), _mqttId=device["mqtt_Id"], _state=False, _value=0)
+                    _id=int(device["id"]), _mqttId=device["mqtt_Id"], _state=False, _value=0, _status="Off")
                 db.session.add(newDevice)
                 db.session.commit()
         elif (device["type"] == "rgb"):
@@ -38,7 +38,7 @@ def setup(devices):
                     "status": db_record._state, "mode": db_record._mode, "value": db_record._value}
             else:
                 newDevice = rgb(
-                    _id=int(device["id"]), _mqttId=device["mqtt_Id"], _state=False, _mode="auto", _value=0)
+                    _id=int(device["id"]), _mqttId=device["mqtt_Id"], _state=False, _mode="auto", _value=0, _status="Off")
                 db.session.add(newDevice)
                 db.session.commit()
         elif (device["type"] == "rgbcct"):
@@ -50,7 +50,7 @@ def setup(devices):
                     "status": db_record._state, "mode": db_record._mode, "rgbValue": db_record._rgbValue, "cctValue": db_record._cctValue}
             else:
                 newDevice = rgbCct(
-                    _id=int(device["id"]), _mqttId=device["mqtt_Id"], _state=False, _mode="auto", _rgbValue=0, _cctValue=0)
+                    _id=int(device["id"]), _mqttId=device["mqtt_Id"], _state=False, _mode="auto", _rgbValue=0, _cctValue=0, _status="Off")
                 db.session.add(newDevice)
                 db.session.commit()
     emit("setup", devices)
