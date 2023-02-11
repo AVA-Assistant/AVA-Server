@@ -1,5 +1,5 @@
 from app import app, db, mqttc, socketio_app, rgb, onOff, rgbCct, brightness
-from flask_socketio import emit, send
+from flask_socketio import emit
 import json
 
 
@@ -64,6 +64,9 @@ def setup(device):
         dbDev._state = device['state']['status']
         dbDev._status = device['status']
         db.session.commit()
+        mqttc.publish(device["mqtt_Id"], json.dumps(
+            {"state": device['state']['status']}))
+
     elif (device["type"] == "brht"):
         dbDev = brightness.query.filter_by(
             _mqttId=device["mqtt_Id"]).first()
@@ -71,6 +74,8 @@ def setup(device):
         dbDev._value = device['state']['value']
         dbDev._status = device['status']
         db.session.commit()
+        mqttc.publish(device["mqtt_Id"], json.dumps(
+            {"state": device['state']['status'], "value": device['state']['value']}))
     elif (device["type"] == "rgb"):
         dbDev = rgb.query.filter_by(
             _mqttId=device["mqtt_Id"]).first()
@@ -90,4 +95,4 @@ def setup(device):
         db.session.commit()
 
     if device['emit']:
-        emit("stateChanged", device)
+        emit("stateChanged", device, broadcast=True)
