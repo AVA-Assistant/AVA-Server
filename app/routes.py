@@ -27,7 +27,7 @@ def setup(room):
         _id=room["id"]).first()
 
     emit("setupRoom", {'temp': db_record._temperature,
-                       "humidity": db_record._humidity}, broadcast=True)
+                       "humidity": db_record._humidity, "pearsonCount": db_record._pearsonCount}, broadcast=True)
 
 
 @socketio_app.on('changeState')
