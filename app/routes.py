@@ -3,7 +3,7 @@ from flask_socketio import emit
 import json
 
 
-@socketio_app.on('setup')
+@socketio_app.on('setupDevices')
 def setup(devices):
     for device in devices:
         db_record = Devices.query.filter_by(
@@ -16,6 +16,7 @@ def setup(devices):
                 _id=int(device["id"]), _type=device["type"], _mqttId=device["mqtt_Id"], _status="Off")
             db.session.add(newDevice)
             db.session.commit()
+            device["status"] = "Off"
 
     emit("setup", devices)
 
