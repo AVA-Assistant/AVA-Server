@@ -34,4 +34,10 @@ class Rooms(db.Model):
 
 
 with app.app_context():
+    newRoom = Rooms(
+        _name="Bedroom", _pearsonCount=0, _temperature=25.2, _humidity=93.2)
+    db.session.add(newRoom)
+    db.session.commit()
+
+with app.app_context():
     db.create_all()

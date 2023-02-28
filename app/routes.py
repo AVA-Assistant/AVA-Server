@@ -1,4 +1,4 @@
-from app import app, db, mqttc, socketio_app, Devices
+from app import app, db, mqttc, socketio_app, Devices, Rooms
 from flask_socketio import emit
 import json
 
@@ -18,7 +18,16 @@ def setup(devices):
             db.session.commit()
             device["status"] = "Off"
 
-    emit("setup", devices)
+    emit("setupDevices", devices)
+
+
+@socketio_app.on('setupRoom')
+def setup(room):
+    db_record = Rooms.query.filter_by(
+        _id=room["id"]).first()
+
+    emit("setupRoom", {'temp': db_record._temperature,
+                       "humidity": db_record._humidity}, broadcast=True)
 
 
 @socketio_app.on('changeState')
