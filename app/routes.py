@@ -10,7 +10,7 @@ def setup(devices):
             _mqttId=device["mqtt_Id"]).first()
         if (db_record):
             device["status"] = db_record._status
-            device["settings"] = db_record._settings
+            device["settings"] = db_record._settings if db_record._settings != None else {}
         else:
             newDevice = Devices(
                 _id=int(device["id"]), _type=device["type"], _mqttId=device["mqtt_Id"], _status="Off")
