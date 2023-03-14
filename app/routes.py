@@ -17,7 +17,7 @@ def setup(devices):
             db.session.add(newDevice)
             db.session.commit()
             device["status"] = "Off"
-
+        print("SETUP " + device["name"] + ": " + str(device["settings"]))
     emit("setupDevices", devices)
 
 
@@ -31,13 +31,16 @@ def setup(room):
 
 
 @socketio_app.on('changeState')
-def setup(device):
-    dbDev = Devices.query.filter_by(
-        _mqttId=device["mqtt_Id"]).first()
-    dbDev._settings = device['settings']
-    dbDev._status = device['status']
-    db.session.commit()
-    mqttc.publish(device["mqtt_Id"], json.dumps(
-        device['settings']))
-    if device['emit']:
-        emit("stateChanged", device, broadcast=True)
+def setup(devices):
+    for device in devices:
+        dbDev = Devices.query.filter_by(
+            _mqttId=device["mqtt_Id"]).first()
+        dbDev._settings = device['settings']
+        dbDev._status = device['status']
+        db.session.commit()
+        mqttc.publish(device["mqtt_Id"], json.dumps(
+            device['settings']))
+
+        if device['emit']:
+            emit("stateChanged", device, broadcast=True)
+    print(device["name"] + ": " + str(device["settings"]))
