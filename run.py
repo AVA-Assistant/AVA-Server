@@ -4,4 +4,4 @@ mqttc.connect("192.168.1.144", 2000)
 mqttc.loop_start()
 
 if __name__ == "__main__":
-    socketio_app.run(app=app, host='192.168.1.144', port=2500)
+    socketio_app.run(app=app, host='localhost', port=2500)
