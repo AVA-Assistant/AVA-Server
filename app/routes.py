@@ -17,7 +17,7 @@ def setup(devices):
             db.session.add(newDevice)
             db.session.commit()
             device["status"] = "Off"
-        print("SETUP " + device["name"] + ": " + str(device["settings"]))
+        print("SETUP " + str(device))
     emit("setupDevices", devices)
 
 
