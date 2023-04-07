@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 from flask_socketio import SocketIO
 import uuid
+import oss
 
 
 def on_connect(mqttc, obj, flags, rc):
@@ -16,7 +17,11 @@ mqttc.on_connect = on_connect
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///IoT_Devices.db'
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
+    os.path.join(basedir, 'IoT_Devices.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
