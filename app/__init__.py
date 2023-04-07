@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 from flask_socketio import SocketIO
 import uuid
-import oss
+import os
 
 
 def on_connect(mqttc, obj, flags, rc):
