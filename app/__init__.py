@@ -20,8 +20,7 @@ app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
-    os.path.join(basedir, 'IoT_Devices.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'IoT_Devices.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -33,8 +32,8 @@ class Devices(db.Model):
     _type = db.Column(db.String, nullable=False)
     _mqttId = db.Column(db.String, unique=True, nullable=False)
     _status = db.Column(db.String, nullable=False)
-    _settings = db.Column(
-        db.JSON(), nullable=True)
+    _baseline = db.Column(db.JSON(), nullable=True)
+    _settings = db.Column(db.JSON(), nullable=True)
 
     def __repr__(self):
         return f"<Device: {self._mqttId}>"
